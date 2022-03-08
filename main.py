@@ -3,6 +3,9 @@ import numpy as np
 
 img = cv2.imread("lines.jpg",1)
 
+height = img.shape[0]
+width = img.shape[1]
+
 #perspective transform
 pts1 = np.float32([[854, 1227], [2308, 1227],[81, 2381], [2998, 2381]])
 pts2 = np.float32([[0, 0], [400, 0], [0, 400], [400, 400]])
@@ -30,5 +33,9 @@ for i in lines:
     pt2 = (int(x0 - 1000 * (-b)), int(y0 - 1000 * (a)))
     cv2.line(result, pt1, pt2, (0, 0, 255), 1, cv2.LINE_AA)
 
+matrix2 = cv2.getPerspectiveTransform(pts2, pts1)
+final = cv2.warpPerspective(img, matrix2, (width, height))
+
 #save image
-cv2.imwrite('houghlines3.jpg',result)
+cv2.imwrite('test1.jpg',result)
+cv2.imwrite('final.jpg',final)
