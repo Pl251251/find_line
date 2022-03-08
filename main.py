@@ -34,7 +34,7 @@ for i in lines:
     cv2.line(result, pt1, pt2, (0, 0, 255), 1, cv2.LINE_AA)
 
 matrix2 = cv2.getPerspectiveTransform(pts2, pts1)
-final = cv2.warpPerspective(img, matrix2, (width, height))
+final = cv2.warpPerspective(result, matrix2, (width, height))
 
 #save image
 cv2.imwrite('test1.jpg',result)
