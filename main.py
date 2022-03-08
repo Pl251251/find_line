@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+
+
 img = cv2.imread("image1.jpg",1)
 
 height = img.shape[0]
@@ -36,7 +38,9 @@ for i in lines:
     if (x0<a):
         line1 =i
     if (x0>a):
-        line1 =i
+        line2 =i
+
+
 
 matrix2 = cv2.getPerspectiveTransform(pts2, pts1)
 final = cv2.warpPerspective(result, matrix2, (width, height))
