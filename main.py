@@ -45,6 +45,21 @@ for i in lines:
 matrix2 = cv2.getPerspectiveTransform(pts2, pts1)
 final = cv2.warpPerspective(result, matrix2, (width, height))
 
+roi = img[0:height, 0:width]
+# Now create a mask of logo and create its inverse mask also
+img2gray = cv2.cvtColor(final,cv2.COLOR_BGR2GRAY)
+ret, mask = cv2.threshold(img2gray, 10, 255, cv2.THRESH_BINARY)
+mask_inv = cv2.bitwise_not(mask)
+# Now black-out the area of logo in ROI
+img1_bg = cv2.bitwise_and(roi,roi,mask = mask_inv)
+# Take only region of logo from logo image.
+img2_fg = cv2.bitwise_and(final,final,mask = mask)
+# Put logo in ROI and modify the main image
+dst = cv2.add(img1_bg,img2_fg)
+img[0:height, 0:width ] = dst
+
+
 #save image
 cv2.imwrite('test1.jpg',result)
 cv2.imwrite('final.jpg',final)
+cv2.imwrite('idk.jpg',img)
