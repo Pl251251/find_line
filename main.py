@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 
 
-
 img = cv2.imread("image1.jpg",1)
 
 height = img.shape[0]
@@ -24,6 +23,8 @@ edges = cv2.Canny(gray,50,150,apertureSize = 3)
 lines = cv2.HoughLines(edges, 1, np.pi / 180, 150, None, 0, 0)
 
 #draw lines
+c=1000
+d=0
 for i in lines:
     rho = i[0][0]
     theta = i[0][1]
@@ -34,11 +35,32 @@ for i in lines:
     pt1 = (int(x0 + 1000 * (-b)), int(y0 + 1000 * (a)))
     pt2 = (int(x0 - 1000 * (-b)), int(y0 - 1000 * (a)))
     cv2.line(result, pt1, pt2, (0, 0, 255), 1, cv2.LINE_AA)
-    a=1000
-    if (x0<a):
+
+    if (x0<c):
         line1 =i
-    if (x0>a):
+        c= x0
+    if (x0>d):
         line2 =i
+        d=x0
+
+try:
+    lst =[line1,line2]
+    lst2 =[]
+    for i in lst:
+        rho = i[0][0]
+        theta = i[0][1]
+        a = np.cos(theta)
+        b = np.sin(theta)
+        x1 = a * rho
+        y1 = b * rho
+        lst2.append([a, b, x1, y1])
+
+
+    pt1 = (int((lst2[1][2]-lst2[0][2]) + 1000 * ((-1) * lst[0][1])), int((lst2[1][3]-lst2[0][3]) + 1000 * ((1) * lst[0][0])))
+    pt2 = (int(x0 - 1000 * (-b)), int(y0 - 1000 * (a)))
+    cv2.line(result, pt1, pt2, (0, 255, 0), 1, cv2.LINE_AA)
+except:
+    print("oh no")
 
 
 
@@ -48,7 +70,7 @@ final = cv2.warpPerspective(result, matrix2, (width, height))
 roi = img[0:height, 0:width]
 # Now create a mask of logo and create its inverse mask also
 img2gray = cv2.cvtColor(final,cv2.COLOR_BGR2GRAY)
-ret, mask = cv2.threshold(img2gray, 10, 255, cv2.THRESH_BINARY)
+ret, mask = cv2.threshold(img2gray, 0, 255, cv2.THRESH_BINARY)
 mask_inv = cv2.bitwise_not(mask)
 # Now black-out the area of logo in ROI
 img1_bg = cv2.bitwise_and(roi,roi,mask = mask_inv)
