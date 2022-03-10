@@ -8,7 +8,7 @@ height = img.shape[0]
 width = img.shape[1]
 
 #perspective transform
-pts1 = np.float32([[854, 2027], [2308, 2027],[81, 3181], [2998, 3181]])
+pts1 = np.float32([[910, 1743], [2193, 1743],[254, 2909], [3015, 2909]])
 pts2 = np.float32([[0, 0], [400, 0], [0, 400], [400, 400]])
 
 matrix = cv2.getPerspectiveTransform(pts1, pts2)
@@ -20,7 +20,7 @@ gray = cv2.cvtColor(result,cv2.COLOR_BGR2GRAY)
 edges = cv2.Canny(gray,50,150,apertureSize = 3)
 
 #detect lines
-lines = cv2.HoughLines(edges, 1, np.pi / 180, 150, None, 0, 0)
+lines = cv2.HoughLines(edges, 1, np.pi / 180, 200, None, 0, 0)
 
 #draw lines
 c=1000
@@ -43,24 +43,24 @@ for i in lines:
         line2 =i
         d=x0
 
-try:
-    lst =[line1,line2]
-    lst2 =[]
-    for i in lst:
-        rho = i[0][0]
-        theta = i[0][1]
-        a = np.cos(theta)
-        b = np.sin(theta)
-        x1 = a * rho
-        y1 = b * rho
-        lst2.append([a, b, x1, y1])
 
+lst =[line1,line2]
+lst2 =[]
+for i in lst:
+    rho = i[0][0]
+    theta = i[0][1]
+    a = np.cos(theta)
+    b = np.sin(theta)
+    x1 = a * rho
+    y1 = b * rho
+    lst2.append([a, b, x1, y1])
 
-    pt1 = (int((lst2[1][2]-lst2[0][2]) + 1000 * ((-1) * lst[0][1])), int((lst2[1][3]-lst2[0][3]) + 1000 * ((1) * lst[0][0])))
-    pt2 = (int(x0 - 1000 * (-b)), int(y0 - 1000 * (a)))
-    cv2.line(result, pt1, pt2, (0, 255, 0), 1, cv2.LINE_AA)
-except:
-    print("oh no")
+info1 =(lst2[1][2] + lst2[0][2])/2
+info2 = (lst2[1][2]+lst2[0][2])/2
+
+pt1 = (int(info1 + 1000 * ((-1) * lst2[0][1])), int((lst2[1][3]-lst2[0][3]) + 1000 * ((1) * lst2[0][0])))
+pt2 = (int(info2 - 1000 * ((-1) * lst2[0][1])), int((lst2[1][3]-lst2[0][3]) - 1000 * ((1) * lst2[0][0])))
+cv2.line(result, pt1, pt2, (0, 255, 0), 1, cv2.LINE_AA)
 
 
 
