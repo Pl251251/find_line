@@ -8,7 +8,7 @@ height = img.shape[0]
 width = img.shape[1]
 
 #perspective transform
-pts1 = np.float32([[910, 1743], [2193, 1743],[254, 2909], [3015, 2909]])
+pts1 = np.float32([[810, 2003], [2303, 2003],[154, 3209], [2915, 3209]])
 pts2 = np.float32([[0, 0], [400, 0], [0, 400], [400, 400]])
 
 matrix = cv2.getPerspectiveTransform(pts1, pts2)
@@ -20,7 +20,7 @@ gray = cv2.cvtColor(result,cv2.COLOR_BGR2GRAY)
 edges = cv2.Canny(gray,50,150,apertureSize = 3)
 
 #detect lines
-lines = cv2.HoughLines(edges, 1, np.pi / 180, 200, None, 0, 0)
+lines = cv2.HoughLines(edges, 1, np.pi / 180, 185, None, 0, 0)
 
 #draw lines
 c=1000
@@ -74,8 +74,10 @@ ret, mask = cv2.threshold(img2gray, 0, 255, cv2.THRESH_BINARY)
 mask_inv = cv2.bitwise_not(mask)
 # Now black-out the area of logo in ROI
 img1_bg = cv2.bitwise_and(roi,roi,mask = mask_inv)
+
 # Take only region of logo from logo image.
 img2_fg = cv2.bitwise_and(final,final,mask = mask)
+
 # Put logo in ROI and modify the main image
 dst = cv2.add(img1_bg,img2_fg)
 img[0:height, 0:width ] = dst
