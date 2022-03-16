@@ -2,13 +2,13 @@ import cv2
 import numpy as np
 
 
-img = cv2.imread("image1.jpg",1)
+img = cv2.imread("image3.jpg",1)
 
 height = img.shape[0]
 width = img.shape[1]
 
 #perspective transform
-pts1 = np.float32([[810, 2003], [2303, 2003],[154, 3209], [2915, 3209]])
+pts1 = np.float32([[760, 2003], [2303, 2003],[104, 3209], [2915, 3209]])
 pts2 = np.float32([[0, 0], [400, 0], [0, 400], [400, 400]])
 
 matrix = cv2.getPerspectiveTransform(pts1, pts2)
