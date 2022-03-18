@@ -22,7 +22,7 @@ result = cv2.warpPerspective(img, matrix, (400, 400))
 #gray and edge
 gray = cv2.cvtColor(result,cv2.COLOR_BGR2GRAY)
 edges = cv2.Canny(gray,50,150,apertureSize = 3)
-
+"""
 #detect lines
 lines = cv2.HoughLines(edges, 1, np.pi / 180, 144, None, 0, 0)
 
@@ -61,18 +61,38 @@ for i in lst:
     pt1 = (int(x1 + 1000 * (-b)), int(y1 + 1000 * (a)))
     pt2 = (int(x1 - 1000 * (-b)), int(y1 - 1000 * (a)))
     lst2.append([a, b, x1, y1])
-    cv2.line(result, pt1, pt2, (255, 0, 0), 1, cv2.LINE_AA)
+    cv2.line(result, pt1, pt2, (0, 0, 255), 1, cv2.LINE_AA)
     #cv2.circle(result,(int(x1),int(y1)),10,(255,0,0),10)
 
 info1 =(lst2[1][2] + lst2[0][2])/2
 info2 = (lst2[1][2]+lst2[0][2])/2
 
-pt1 = (int(info1 + 1000 * ((-1) * lst2[0][1])), int((lst2[1][3]-lst2[0][3]) + 1000 * ((1) * lst2[0][0])))
-pt2 = (int(info2 - 1000 * ((-1) * lst2[0][1])), int((lst2[1][3]-lst2[0][3]) - 1000 * ((1) * lst2[0][0])))
+pt1 = (int(info1 +  1000*((-1) * lst2[0][1])), int((lst2[1][3]-lst2[0][3]) + 1000*((1) * lst2[0][0])))
+pt2 = (int(info2 -  800*((-1) * lst2[0][1])), int((lst2[1][3]-lst2[0][3]) - 800*((1) * lst2[0][0])))
 cv2.line(result, pt1, pt2, (0, 255, 0), 1, cv2.LINE_AA)
+cv2.arrowedLine(result, pt1, pt2, (255, 0, 0), 1, cv2.LINE_AA)
+"""
 
+linesP = cv2.HoughLinesP(edges, 1, np.pi / 180, 150, None, 50, 10)
+c=9000
+d=0
 
-
+for i in linesP:
+    l = i[0]
+    cv2.line(result, (l[0], l[1]), (l[2], l[3]), (0, 0, 255), 3, cv2.LINE_AA)
+    
+    if (l[0]<c):
+        line1 =i
+        c= l[0]
+    if (l[0]>d):
+        line2 =i
+        d=l[0]
+    
+lst= [line1,line2]
+for i in lst:
+    q =i[0]
+    
+    
 matrix2 = cv2.getPerspectiveTransform(pts2, pts1)
 final = cv2.warpPerspective(result, matrix2, (width, height))
 
