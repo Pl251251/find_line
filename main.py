@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 #change name of image file
-img = cv2.imread("image4.jpg",1)
+img = cv2.imread("image6.jpg",1)
 
 height = img.shape[0]
 width = img.shape[1]
@@ -28,7 +28,7 @@ c=9000
 d=0
 for i in linesP:
     l = i[0]
-    cv2.line(result, (l[0], l[1]), (l[2], l[3]), (0, 0, 255), 3, cv2.LINE_AA)
+    #cv2.line(result, (l[0], l[1]), (l[2], l[3]), (0, 0, 255), 3, cv2.LINE_AA)
     if (l[0]<c):
         line1 =i
         c= l[0]
@@ -39,10 +39,14 @@ for i in linesP:
 #draw left most and right most lines
 info1 = line1[0]
 info2 =line2[0]
-pt1 = (int(((info1[0]) +int(info2[0]))/2), int((info1[1] +info2[1])/2))
-pt2 = (int((info1[2] +info2[2])/2), int((info1[3] +info2[3])/2))
-cv2.arrowedLine(result, pt1, pt2, (255, 0, 0), 1, cv2.LINE_AA)
-
+y1= int((info1[1] +info2[1])/2)
+y2 =int((info1[3] +info2[3])/2)
+pt1 = (int(((info1[0]) +int(info2[0]))/2), y1 )
+pt2 = (int((info1[2] +info2[2])/2), y2)
+if (y1>y2):
+    cv2.arrowedLine(result, pt1, pt2, (255, 0, 0), 1, cv2.LINE_AA)
+elif(y1<y2):
+    cv2.arrowedLine(result, pt2, pt1, (255, 0, 0), 1, cv2.LINE_AA)
 #tranform image back
 matrix2 = cv2.getPerspectiveTransform(pts2, pts1)
 final = cv2.warpPerspective(result, matrix2, (width, height))
