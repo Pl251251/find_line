@@ -80,19 +80,21 @@ d=0
 for i in linesP:
     l = i[0]
     cv2.line(result, (l[0], l[1]), (l[2], l[3]), (0, 0, 255), 3, cv2.LINE_AA)
-    
+
     if (l[0]<c):
         line1 =i
         c= l[0]
     if (l[0]>d):
         line2 =i
         d=l[0]
-    
-lst= [line1,line2]
-for i in lst:
-    q =i[0]
-    
-    
+
+
+info1 = line1[0]
+info2 =line2[0]
+pt1 = (int(info1[0] +info2[0])/2), int((info1[0] +info2[0])/2)
+pt2 = (int(info1[0] +info2[0])/2))
+
+
 matrix2 = cv2.getPerspectiveTransform(pts2, pts1)
 final = cv2.warpPerspective(result, matrix2, (width, height))
 
